@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+.env
+*.json
+!package.json
+venv/
+.venv/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# 분석/테스트 임시 파일
+_*.txt
+_*.json
+output/

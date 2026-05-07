@@ -1,0 +1,14 @@
+venv/
+.venv/
+data/
+tests/
+__pycache__/
+*.pyc
+.env
+credentials.json
+cloud_functions/
+run_*.py
+test_*.py
+SETUP_GUIDE.md
+PROJECT_PLAN.md
+.git/
