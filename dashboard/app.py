@@ -48,11 +48,13 @@ from analyses.gemini_comment import narrate_sentiment, narrate_segment, narrate_
 
 # ── AI 코멘트 가독성: 숫자/키워드 강조 ──────────────────
 _NUMBER_HIGHLIGHT_RE = re.compile(
-    r'\d+(?:\.\d+)?\s*(?:%p|pp|%)'
-    r'|\d+(?:\.\d+)?\s*만(?:\s*\d+\s*천)?(?:\s*(?:건|명|개|점))?'
+    r'\d+(?:\.\d+)?\s*(?:%p|pp|%)'                                              # 12.9%p / 22.1%
+    r'|\d+(?:\.\d+)?\s*-\s*\d+(?:\.\d+)?\s*시간(?:\s*(?:미만|이상))?'           # 10-50시간 [미만|이상]
+    r'|\d+(?:\.\d+)?\s*시간\s*(?:미만|이상)'                                    # 10시간 미만 / 50시간 이상
+    r'|\d+(?:\.\d+)?\s*만(?:\s*\d+\s*천)?(?:\s*(?:건|명|개|점))?'               # 53만 건
     r'|\d+(?:\.\d+)?\s*억(?:\s*\d+\s*천만)?(?:\s*(?:건|명|개|점))?'
-    r'|\d{1,3}(?:,\d{3})+(?:\s*(?:건|명|개|점))?'
-    r'|\d+(?:\.\d+)?\s*(?:시간|점|건|명|개|배)'
+    r'|\d{1,3}(?:,\d{3})+(?:\s*(?:건|명|개|점))?'                               # 1,234,567명
+    r'|\d+(?:\.\d+)?\s*(?:시간|점|건|명|개|배)'                                 # 10시간 / 25개 (마지막 fallback)
 )
 # 따옴표(ASCII/스마트)로 감싼 한글 키워드 — 첫 글자가 한글이고 길이 1~11 (공백·/·_ 허용)
 _QUOTED_KEYWORD_RE = re.compile(
@@ -63,8 +65,9 @@ _HIGHLIGHT_TAG = '<strong style="color:#e6c463;">{}</strong>'
 
 def _highlight_text(text: str) -> str:
     """키워드(따옴표 안 한글) + 숫자+단위 패턴을 굵은 골드 색으로 강조.
-    Gemini 출력에 <, &, > 같은 메타 문자가 섞여도 안전하도록 escape 후 매칭."""
-    text = html.escape(text)
+    Gemini 출력에 <, &, > 같은 메타 문자가 섞여도 안전하도록 escape 후 매칭.
+    quote=False — 작은따옴표/큰따옴표는 _QUOTED_KEYWORD_RE 매칭에 필요해 보존."""
+    text = html.escape(text, quote=False)
     text = _QUOTED_KEYWORD_RE.sub(
         lambda m: _HIGHLIGHT_TAG.format(m.group(0)),
         text,
