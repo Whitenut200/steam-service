@@ -870,11 +870,15 @@ if tab == "Overview":
             def make_radar(values_dict, color, fill_color):
                 labels = list(values_dict.keys())
                 values = list(values_dict.values())
+                total = sum(values) or 1
+                ratios = [round(v / total * 100, 1) for v in values]
                 fig = go.Figure()
                 fig.add_trace(go.Scatterpolar(
                     r=values + [values[0]], theta=labels + [labels[0]],
+                    customdata=ratios + [ratios[0]],
                     fill="toself", fillcolor=fill_color,
                     line=dict(color=color, width=2),
+                    hovertemplate="<b>%{theta}</b><br>구성 비율: %{customdata}%<extra></extra>",
                 ))
                 fig.update_layout(
                     polar=dict(
@@ -1036,7 +1040,10 @@ if tab == "Overview":
                 _daily["day"] = pd.to_datetime(_daily["day"])
                 chart_df = _daily.rename(columns={"day": "x"})
             fig_player = px.line(chart_df, x="x", y="player_count")
-            fig_player.update_traces(line_color="#4c6b22")
+            fig_player.update_traces(
+                line_color="#4c6b22",
+                hovertemplate="%{x|%Y-%m-%d}<br>평균 동시접속자: %{y:,.0f}명<extra></extra>",
+            )
             fig_player.update_layout(
                 paper_bgcolor="rgba(0,0,0,0)",
                 plot_bgcolor="rgba(0,0,0,0)",
