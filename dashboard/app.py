@@ -878,7 +878,7 @@ if tab == "Overview":
                     customdata=ratios + [ratios[0]],
                     fill="toself", fillcolor=fill_color,
                     line=dict(color=color, width=2),
-                    hovertemplate="<b>%{theta}</b><br>구성 비율: %{customdata}%<extra></extra>",
+                    hovertemplate="<b>%{theta}</b><br>키워드 개수: %{r}(%{customdata}%)<extra></extra>",
                 ))
                 fig.update_layout(
                     polar=dict(
@@ -891,6 +891,7 @@ if tab == "Overview":
                     margin=dict(t=20, b=20, l=20, r=20),
                     height=375,
                     showlegend=False,
+                    hoverlabel=dict(bgcolor="#323E4D", font_size=13, font_color="#fff"),
                 )
                 return fig
 
@@ -1052,6 +1053,7 @@ if tab == "Overview":
                 height=400,
                 xaxis=dict(gridcolor="#333", title=""),
                 yaxis=dict(gridcolor="#333", title=""),
+                hoverlabel=dict(bgcolor="#323E4D", font_size=13, font_color="#fff"),
             )
             st.plotly_chart(fig_player, use_container_width=True)
         else:
