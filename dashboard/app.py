@@ -878,7 +878,7 @@ if tab == "Overview":
                     customdata=ratios + [ratios[0]],
                     fill="toself", fillcolor=fill_color,
                     line=dict(color=color, width=2),
-                    hovertemplate="<b>%{theta}</b><br>키워드 개수: %{r}(%{customdata}%)<extra></extra>",
+                    hovertemplate="<b>%{theta}</b><br>키워드 개수 : %{r}개 (%{customdata}%)<extra></extra>",
                 ))
                 fig.update_layout(
                     polar=dict(
